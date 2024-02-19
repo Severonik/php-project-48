@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use function Hexlet\Code\Differ\genDiff;
+use function Hexlet\Code\genDiff;
 
 class GenDiffTest extends TestCase
 {
