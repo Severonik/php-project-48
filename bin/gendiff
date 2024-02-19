@@ -1,6 +1,18 @@
 #!/usr/bin/env php
 <?php
-require 'vendor/autoload.php';
+
+// Путь который будет использован при глобальной установке пакета
+$autoloadPath1 = __DIR__ . '/../../../autoload.php';
+// Путь для локальной работы с проектом
+$autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
+
+if (file_exists($autoloadPath1)) {
+    require_once $autoloadPath1;
+} else {
+    require_once $autoloadPath2;
+}
+
+use function Hexlet\Code\genDiff;
 
 $doc = <<<DOC
 Generate diff
@@ -8,12 +20,12 @@ Generate diff
 Usage:
   gendiff (-h|--help)
   gendiff (-v|--version)
+  gendiff [--format <fmt>] <firstFile> <secondFile>
 
-  Options:
+Options:
   -h --help                     Show this screen.
   -v --version                  Show version.
   --format <fmt>                Report format [default: stylish]
-
 DOC;
 
 $args = \Docopt::handle($doc);
@@ -22,9 +34,9 @@ if ($args['--help']) {
     echo $doc;
 } elseif ($args['--version']) {
     echo "gendiff version 1.0.0\n";
-} elseif ($args['<firstFile>'] && $args['<secondFile>']) {
+} else {
     $firstFile = $args['<firstFile>'];
     $secondFile = $args['<secondFile>'];
-    $format = $args['--format'];
-    echo "Comparing '{$firstFile}' and '{$secondFile}' in '{$format}' format...\n";
+    $format = $args['--format'] ?? 'stylish';
+    echo genDiff($firstFile, $secondFile);
 }
