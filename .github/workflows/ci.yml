@@ -1,12 +1,18 @@
-name: CI
+name: PHP CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v2
+
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
@@ -14,15 +20,28 @@ jobs:
         extensions: mbstring, xml
         coverage: pcov
         tools: phpunit
+
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
-    - name: Before script for Code Climate
+      run: composer install --prefer-dist --no-progress --no-suggest
+
+    - name: Run PHPUnit
+      run: ./vendor/bin/phpunit --coverage-clover clover.xml
+      # Сохраните код выхода PHPUnit, чтобы использовать его в следующем шаге
+      continue-on-error: true
+
+    - name: Setup Code Climate test-reporter
       run: |
         curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         chmod +x ./cc-test-reporter
         ./cc-test-reporter before-build
-    - name: Run tests and generate coverage report
-      run: ./vendor/bin/phpunit --coverage-clover clover.xml
-    - name: After script for Code Climate
+
+    - name: Upload coverage to Code Climate
       run: |
-        ./cc-test-reporter after-build --exit-code ${{ job.status }} -t clover --id ${{ secrets.CC_TEST_REPORTER_ID }} --coverage-input-type clover
+        EXIT_CODE=${{ steps.tests.outcome }}
+        if [ $EXIT_CODE == "success" ]; then
+          ./cc-test-reporter after-build --exit-code 0 -t clover --id ${{ secrets.CC_TEST_REPORTER_ID }} --coverage-input-type clover
+        else
+          ./cc-test-reporter after-build --exit-code 1 -t clover --id ${{ secrets.CC_TEST_REPORTER_ID }} --coverage-input-type clover
+        fi
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
