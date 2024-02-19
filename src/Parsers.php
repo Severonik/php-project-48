@@ -8,7 +8,7 @@ function parse($content, $format)
 {
     return match ($format) {
         'json' => json_decode($content, true),
-        'yaml', 'yml' => Yaml::parse($content, Yaml::PARSE_OBJECT_FOR_MAP),
+        'yaml', 'yml' => Yaml::parse($content),
         default => throw new \Exception("Unsupported file format: {$format}"),
     };
 }
