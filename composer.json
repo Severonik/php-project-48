@@ -4,8 +4,14 @@
     "autoload": {
         "psr-4": {
             "Hexlet\\Code\\": "src/"
-        }
+        },
+        "files": [
+            "src/Differ.php"
+        ]
     },
+    "bin": [
+        "bin/gendiff"
+    ],
     "authors": [
         {
             "name": "Severonik",
