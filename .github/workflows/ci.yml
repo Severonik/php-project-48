@@ -37,11 +37,13 @@ jobs:
 
     - name: Upload coverage to Code Climate
       run: |
-        EXIT_CODE=${{ steps.tests.outcome }}
-        if [ $EXIT_CODE == "success" ]; then
-          ./cc-test-reporter after-build --exit-code 0 -t clover --id ${{ secrets.CC_TEST_REPORTER_ID }} --coverage-input-type clover
+        ./vendor/bin/phpunit --coverage-clover clover.xml
+        EXIT_CODE=$?
+        if [ "$EXIT_CODE" == "0" ]; then
+        echo "Tests passed. Uploading coverage to Code Climate."
+        ./cc-test-reporter after-build --exit-code $EXIT_CODE -t clover --id ${{ secrets.CC_TEST_REPORTER_ID }} --coverage-input-type clover
         else
-          ./cc-test-reporter after-build --exit-code 1 -t clover --id ${{ secrets.CC_TEST_REPORTER_ID }} --coverage-input-type clover
+        echo "Tests failed with exit code $EXIT_CODE. Skipping upload to Code Climate."
         fi
       env:
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
