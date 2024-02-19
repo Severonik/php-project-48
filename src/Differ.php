@@ -2,7 +2,7 @@
 
 namespace Hexlet\Code;
 
-use function Hexlet\Code\Parsers\parse;
+use function Hexlet\Code\parse;
 
 function genDiff($pathToFile1, $pathToFile2)
 {
