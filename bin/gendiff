@@ -9,9 +9,11 @@ Usage:
   gendiff (-h|--help)
   gendiff (-v|--version)
 
-Options:
+  Options:
   -h --help                     Show this screen.
   -v --version                  Show version.
+  --format <fmt>                Report format [default: stylish]
+
 DOC;
 
 $args = \Docopt::handle($doc);
@@ -19,6 +21,10 @@ $args = \Docopt::handle($doc);
 if ($args['--help']) {
     echo $doc;
 } elseif ($args['--version']) {
-    // Вывести версию утилиты
     echo "gendiff version 1.0.0\n";
+} elseif ($args['<firstFile>'] && $args['<secondFile>']) {
+    $firstFile = $args['<firstFile>'];
+    $secondFile = $args['<secondFile>'];
+    $format = $args['--format'];
+    echo "Comparing '{$firstFile}' and '{$secondFile}' in '{$format}' format...\n";
 }
