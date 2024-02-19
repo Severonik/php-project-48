@@ -26,8 +26,8 @@ JSON;
 
     public function testGenDiffWithYamlFiles()
 {
-    $pathToFile1 = __DIR__ . '/fixtures/file1.yaml';
-    $pathToFile2 = __DIR__ . '/fixtures/file2.yaml';
+    $pathToFile1 = __DIR__ . '/fixtures/filepath1.yaml';
+    $pathToFile2 = __DIR__ . '/fixtures/filepath2.yaml';
 
     $expectedResult = <<<YAML
 {
