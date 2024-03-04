@@ -12,7 +12,14 @@ class GenDiffTest extends TestCase
     {
         $pathToFile1 = __DIR__ . '/fixtures/file1.json';
         $pathToFile2 = __DIR__ . '/fixtures/file2.json';
-        $expectedResult = '{"common":{"setting1":"Value 1","setting2":200,"setting3":true,"setting6":{"key":"value","doge":{"wow":""}}},"group1":{"baz":"bas","foo":"bar","nest":{"key":"value"}},"group2":{"abc":12345,"deep":{"id":45}},"group3":{"deep":{"id":{"number":45}},"fee":100500}}';
+        $expectedResult = '{
+          - follow: false
+            host: "hexlet.io"
+          - proxy: "123.234.53.22"
+          - timeout: 50
+          + timeout: 20
+          + verbose: true
+        }';
         
         $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2));
     }
