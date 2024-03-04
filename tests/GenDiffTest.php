@@ -72,6 +72,7 @@ JSON;
     }
     YAML;
     
+        $expectedResult = str_replace("\n", PHP_EOL, $expectedResult); // Заменяем новую строку на маркер новой строки операционной системы
         $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2, 'stylish'));
-    }
+    }    
   }
