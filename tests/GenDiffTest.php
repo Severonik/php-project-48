@@ -74,5 +74,4 @@ JSON;
     
         $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2, 'stylish'));
     }
-    
-}
+  }
