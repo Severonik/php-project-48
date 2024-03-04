@@ -33,7 +33,14 @@ class GenDiffTest extends TestCase
     {
         $pathToFile1 = __DIR__ . '/fixtures/filepath1.yaml';
         $pathToFile2 = __DIR__ . '/fixtures/filepath2.yaml';
-        $expectedResult = '{"common":{"setting1":"Value 1","setting2":200,"setting3":true,"setting6":{"key":"value","doge":{"wow":""}}},"group1":{"baz":"bas","foo":"bar","nest":{"key":"value"}},"group2":{"abc":12345,"deep":{"id":45}},"group3":{"deep":{"id":{"number":45}},"fee":100500}}';
+        $expectedResult = "{\n"
+          . "  - common: {\"setting1\":\"Value 1\",\"setting2\":200,\"setting3\":true,\"setting6\":{\"key\":\"value\",\"doge\":{\"wow\":\"\"}}}\n"
+          . "  + common: {\"follow\":false,\"setting1\":\"Value 1\",\"setting3\":null,\"setting4\":\"blah blah\",\"setting5\":{\"key5\":\"value5\"},\"setting6\":{\"key\":\"value\",\"ops\":\"vops\",\"doge\":{\"wow\":\"so much\"}}}\n"
+          . "  - group1: {\"baz\":\"bas\",\"foo\":\"bar\",\"nest\":{\"key\":\"value\"}}\n"
+          . "  + group1: {\"foo\":\"bar\",\"baz\":\"bars\",\"nest\":\"str\"}\n"
+          . "  - group2: {\"abc\":12345,\"deep\":{\"id\":45}}\n"
+          . "  + group3: {\"deep\":{\"id\":{\"number\":45}},\"fee\":100500}\n"
+          . "}";
         
         $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2));
     }
