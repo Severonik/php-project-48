@@ -16,17 +16,15 @@ function genDiff($pathToFile1, $pathToFile2)
     $data2 = parse($content2, $format2);
 
     $diff = generateDiff($data1, $data2);
-
     return formatDiff($diff);
 }
 
-function generateDiff(array $data1, array $data2): array
+function generateDiff($data1, $data2)
 {
     $keys = array_unique(array_merge(array_keys($data1), array_keys($data2)));
     sort($keys);
 
     $diff = [];
-
     foreach ($keys as $key) {
         if (!array_key_exists($key, $data2)) {
             $diff[] = ['type' => 'removed', 'key' => $key, 'value' => $data1[$key]];
@@ -42,35 +40,20 @@ function generateDiff(array $data1, array $data2): array
     return $diff;
 }
 
-function formatDiff(array $diff): string
+function formatDiff($diff)
 {
     $lines = array_map(function ($item) {
         switch ($item['type']) {
-            case 'removed':
-                return "- {$item['key']}: " . stringify($item['value'], 2);
             case 'added':
-                return "+ {$item['key']}: " . stringify($item['value'], 2);
-            case 'unchanged':
-                return "  {$item['key']}: " . stringify($item['value'], 2);
+                return "+ {$item['key']}: " . json_encode($item['value']);
+            case 'removed':
+                return "- {$item['key']}: " . json_encode($item['value']);
             case 'changed':
-                return "- {$item['key']}: " . stringify($item['oldValue'], 2) . "\n+ {$item['key']}: " . stringify($item['newValue'], 2);
+                return "- {$item['key']}: " . json_encode($item['oldValue']) . "\n+ {$item['key']}: " . json_encode($item['newValue']);
+            case 'unchanged':
+                return "  {$item['key']}: " . json_encode($item['value']);
         }
     }, $diff);
 
     return "{\n" . implode("\n", $lines) . "\n}";
-}
-
-function stringify($value, $depth): string
-{
-    if (!is_array($value)) {
-        return json_encode($value);
-    }
-
-    $indent = str_repeat(' ', $depth * 4);
-    $lines = array_map(function ($key, $val) use ($indent, $depth) {
-        $formattedValue = is_array($val) ? stringify($val, $depth + 1) : json_encode($val);
-        return "{$indent}{$key}: {$formattedValue}";
-    }, array_keys($value), $value);
-
-    return "{\n" . implode("\n", $lines) . "\n" . str_repeat(' ', ($depth - 1) * 4) . "}";
 }
