@@ -2,52 +2,37 @@
 
 namespace Hexlet\Code\Formatters;
 
-function stylish($diff)
+class StylishFormatter
 {
-    return buildStylish($diff);
-}
+    public static function format(array $diff): string
+    {
+        return self::buildStylish($diff);
+    }
 
-function buildStylish($diff, $depth = 1)
-{
-    $indentSize = 4;
-    $indent = str_repeat(' ', $indentSize * $depth);
+    private static function buildStylish(array $diff, int $depth = 1): string
+    {
+        $indentSize = 4;
+        $indent = str_repeat(' ', $indentSize * $depth);
 
-    $formattedLines = array_map(function ($key) use ($diff, $depth, $indentSize) {
-        $node = $diff[$key];
-        switch ($node['type']) {
-            case 'nested':
-                $value = buildStylish($node['children'], $depth + 1);
-                $formattedValue = implode("\n", $value);
-                return "{$indent}{$key}: {\n{$formattedValue}\n{$indent}}";
-            case 'added':
-                $formattedValue = stringifyValue($node['value'], $depth);
-                return "{$indent}+ {$key}: {$formattedValue}";
-            case 'removed':
-                $formattedValue = stringifyValue($node['value'], $depth);
-                return "{$indent}- {$key}: {$formattedValue}";
-            case 'unchanged':
-                $formattedValue = stringifyValue($node['value'], $depth);
-                return "{$indent}  {$key}: {$formattedValue}";
-            case 'changed':
-                $formattedOldValue = stringifyValue($node['oldValue'], $depth);
-                $formattedNewValue = stringifyValue($node['newValue'], $depth);
-                return "{$indent}- {$key}: {$formattedOldValue}\n{$indent}+ {$key}: {$formattedNewValue}";
-            default:
-                throw new \Exception("Unknown node type: {$node['type']}");
+        $lines = array_map(function ($key, $value) use ($indent, $depth) {
+            $formattedValue = is_array($value) ? self::buildStylish($value, $depth + 1) : self::formatValue($value, $depth);
+            return "{$indent}  {$key}: {$formattedValue}";
+        }, array_keys($diff), $diff);
+
+        return "{\n" . implode("\n", $lines) . "\n{$indent}}";
+    }
+
+    private static function formatValue($value, int $depth): string
+    {
+        if (is_bool($value)) {
+            return $value ? 'true' : 'false';
         }
-    }, array_keys($diff));
-
-    return $formattedLines;
-}
-
-function stringifyValue($value, $depth)
-{
-    if (is_array($value)) {
-        $formattedValue = implode("\n", buildStylish($value, $depth + 1));
-        return "{\n{$formattedValue}\n" . str_repeat(' ', 4 * $depth) . "}";
-    } elseif (is_bool($value)) {
-        return $value ? 'true' : 'false';
-    } else {
+        if (is_null($value)) {
+            return 'null';
+        }
+        if (is_array($value)) {
+            return self::buildStylish($value, $depth + 1);
+        }
         return $value;
     }
 }
