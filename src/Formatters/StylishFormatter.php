@@ -4,29 +4,30 @@ namespace Hexlet\Code\Formatters;
 
 class StylishFormatter
 {
-    public function buildStylish(array $diff, int $depth = 1): string
+    /**
+     * Форматирует разницу в стиль "стильный" (stylish) формат.
+     *
+     * @param array $diff   Дифференциальная разница между двумя данными
+     * @param int   $depth  Глубина вложенности
+     *
+     * @return string Строковое представление отформатированной разницы
+     */
+    public function formatDiff(array $diff, int $depth = 1): string
     {
         $indentSize = 4;
         $indent = str_repeat(' ', $indentSize * $depth);
         $result = [];
-    
+
         foreach ($diff as $item) {
             switch ($item['type']) {
                 case 'nested':
-                    $nestedIndent = str_repeat(' ', $indentSize * ($depth + 1));
-                    $result[] = "{$indent}{$item['key']}: {$this->buildStylish($item['children'], $depth + 1)}";
+                    $result[] = "{$indent}{$item['key']}: " . $this->formatDiff($item['children'], $depth + 1);
                     break;
                 case 'added':
-                    $value = $this->formatValue($item['value'], $depth);
-                    $result[] = "{$indent}+ {$item['key']}: {$value}";
-                    break;
                 case 'removed':
-                    $value = $this->formatValue($item['value'], $depth);
-                    $result[] = "{$indent}- {$item['key']}: {$value}";
-                    break;
                 case 'unchanged':
                     $value = $this->formatValue($item['value'], $depth);
-                    $result[] = "{$indent}  {$item['key']}: {$value}";
+                    $result[] = "{$indent}{$this->getSignByType($item['type'])} {$item['key']}: {$value}";
                     break;
                 case 'changed':
                     $oldValue = $this->formatValue($item['oldValue'], $depth);
@@ -36,16 +37,45 @@ class StylishFormatter
                     break;
             }
         }
-    
+
         return "{\n" . implode("\n", $result) . "\n}";
     }
-    
+
+    /**
+     * Форматирует значение для вставки в разницу.
+     *
+     * @param mixed $value  Значение для форматирования
+     * @param int   $depth  Глубина вложенности
+     *
+     * @return string Строковое представление отформатированного значения
+     */
     private function formatValue($value, int $depth): string
     {
         if (is_array($value)) {
-            return $this->buildStylish($value, $depth + 1);
+            return $this->formatDiff($value, $depth + 1);
         }
+
         return json_encode($value);
     }
-    
+
+    /**
+     * Возвращает символ, обозначающий тип операции.
+     *
+     * @param string $type  Тип операции ('added', 'removed', 'unchanged')
+     *
+     * @return string Символ операции
+     */
+    private function getSignByType(string $type): string
+    {
+        switch ($type) {
+            case 'added':
+                return '+';
+            case 'removed':
+                return '-';
+            case 'unchanged':
+                return ' ';
+            default:
+                throw new \InvalidArgumentException("Unknown operation type: {$type}");
+        }
+    }
 }
