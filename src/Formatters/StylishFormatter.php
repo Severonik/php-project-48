@@ -4,35 +4,48 @@ namespace Hexlet\Code\Formatters;
 
 class StylishFormatter
 {
-    public static function format(array $diff): string
-    {
-        return self::buildStylish($diff);
-    }
-
-    private static function buildStylish(array $diff, int $depth = 1): string
+    public function buildStylish(array $diff, int $depth = 1): string
     {
         $indentSize = 4;
         $indent = str_repeat(' ', $indentSize * $depth);
-
-        $lines = array_map(function ($key, $value) use ($indent, $depth) {
-            $formattedValue = is_array($value) ? self::buildStylish($value, $depth + 1) : self::formatValue($value, $depth);
-            return "{$indent}  {$key}: {$formattedValue}";
-        }, array_keys($diff), $diff);
-
-        return "{\n" . implode("\n", $lines) . "\n{$indent}}";
+        $result = [];
+    
+        foreach ($diff as $item) {
+            switch ($item['type']) {
+                case 'nested':
+                    $nestedIndent = str_repeat(' ', $indentSize * ($depth + 1));
+                    $result[] = "{$indent}{$item['key']}: {$this->buildStylish($item['children'], $depth + 1)}";
+                    break;
+                case 'added':
+                    $value = $this->formatValue($item['value'], $depth);
+                    $result[] = "{$indent}+ {$item['key']}: {$value}";
+                    break;
+                case 'removed':
+                    $value = $this->formatValue($item['value'], $depth);
+                    $result[] = "{$indent}- {$item['key']}: {$value}";
+                    break;
+                case 'unchanged':
+                    $value = $this->formatValue($item['value'], $depth);
+                    $result[] = "{$indent}  {$item['key']}: {$value}";
+                    break;
+                case 'changed':
+                    $oldValue = $this->formatValue($item['oldValue'], $depth);
+                    $newValue = $this->formatValue($item['newValue'], $depth);
+                    $result[] = "{$indent}- {$item['key']}: {$oldValue}";
+                    $result[] = "{$indent}+ {$item['key']}: {$newValue}";
+                    break;
+            }
+        }
+    
+        return "{\n" . implode("\n", $result) . "\n}";
     }
-
-    private static function formatValue($value, int $depth): string
+    
+    private function formatValue($value, int $depth): string
     {
-        if (is_bool($value)) {
-            return $value ? 'true' : 'false';
-        }
-        if (is_null($value)) {
-            return 'null';
-        }
         if (is_array($value)) {
-            return self::buildStylish($value, $depth + 1);
+            return $this->buildStylish($value, $depth + 1);
         }
-        return $value;
+        return json_encode($value);
     }
+    
 }
