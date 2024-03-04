@@ -37,6 +37,6 @@ if ($args['--help']) {
 } else {
     $firstFile = $args['<firstFile>'];
     $secondFile = $args['<secondFile>'];
-    $format = $args['--format'] ?? 'stylish';
-    echo genDiff($firstFile, $secondFile);
+    $format = $args['--format'] ?? 'stylish'; // Установка форматера по умолчанию
+    echo genDiff($firstFile, $secondFile, $format);
 }
