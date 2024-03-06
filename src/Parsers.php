@@ -6,6 +6,9 @@ use Symfony\Component\Yaml\Yaml;
 
 function parse($content, $format)
 {
+    error_log("Parsing content with format: $format");
+    error_log("Content: $content");
+
     return match ($format) {
         'json' => json_decode($content, true),
         'yaml', 'yml' => Yaml::parse($content),
