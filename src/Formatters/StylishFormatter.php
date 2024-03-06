@@ -16,6 +16,7 @@ class StylishFormatter
     {
         $indentSize = 4;
         $indent = str_repeat(' ', $indentSize * $depth);
+        $indent = (string) $indent;
         $result = [];
 
         foreach ($diff as $item) {
