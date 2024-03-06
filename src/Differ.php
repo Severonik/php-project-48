@@ -40,6 +40,10 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'sty
 
 function buildDiff(array $data1, array $data2): array
 {
+    // Приводим данные к ожидаемому формату
+    $data1 = ensureArrayFormat($data1);
+    $data2 = ensureArrayFormat($data2);
+
     $keys = array_unique(array_merge(array_keys($data1), array_keys($data2)));
     sort($keys);
 
@@ -57,4 +61,13 @@ function buildDiff(array $data1, array $data2): array
     }
 
     return $diff;
+}
+
+function ensureArrayFormat(array $data): array
+{
+    $result = [];
+    foreach ($data as $key => $value) {
+        $result[] = [$key, $value];
+    }
+    return $result;
 }
