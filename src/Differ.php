@@ -2,9 +2,11 @@
 
 namespace Hexlet\Code;
 
+use Hexlet\Code\Formatters\StylishFormatter;
+use Hexlet\Code\Formatters\PlainFormatter;
 use function Hexlet\Code\Parsers\parse;
 
-function genDiff($pathToFile1, $pathToFile2)
+function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'stylish'): string
 {
     // Получаем форматы файлов
     $format1 = pathinfo($pathToFile1, PATHINFO_EXTENSION);
@@ -21,11 +23,23 @@ function genDiff($pathToFile1, $pathToFile2)
     // Сравниваем данные и строим результат сравнения
     $diff = buildDiff($data1, $data2);
 
+    // Выбираем форматтер в зависимости от переданного аргумента
+    switch ($format) {
+        case 'stylish':
+            $formatter = new StylishFormatter();
+            break;
+        case 'plain':
+            $formatter = new PlainFormatter();
+            break;
+        default:
+            throw new \InvalidArgumentException("Unsupported format: {$format}");
+    }
+
     // Форматируем результат сравнения
-    return formatDiff($diff);
+    return $formatter->format($diff);
 }
 
-function buildDiff($data1, $data2)
+function buildDiff(array $data1, array $data2): array
 {
     $keys = array_unique(array_merge(array_keys($data1), array_keys($data2)));
     sort($keys);
@@ -45,9 +59,4 @@ function buildDiff($data1, $data2)
     }
 
     return $diff;
-}
-
-function formatDiff($diff)
-{
-    return "{\n" . implode("\n", $diff) . "\n}";
 }
