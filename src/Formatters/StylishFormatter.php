@@ -19,25 +19,27 @@ class StylishFormatter
         $result = [];
 
         foreach ($diff as $item) {
-            switch ($item['type']) {
+            $key = $item['key'];
+            $type = $item['type'];
+
+            switch ($type) {
                 case 'nested':
-                    $result[] = "{$indent}{$item['key']}: " . $this->format($item['children'], $depth + 1);
+                    $result[] = "{$indent}{$key}: " . $this->format($item['children'], $depth + 1);
                     break;
                 case 'added':
                 case 'removed':
                 case 'unchanged':
                     $value = $this->formatValue($item['value'], $depth);
-                    $result[] = "{$indent}{$this->getSignByType($item['type'])} {$item['key']}: {$value}";
+                    $result[] = "{$indent}{$this->getSignByType($type)} {$key}: {$value}";
                     break;
                 case 'changed':
-                    $indent = str_repeat(' ', $indentSize * ($depth - 1)); // Adjusting the indent for the new value
                     $oldValue = $this->formatValue($item['oldValue'], $depth);
                     $newValue = $this->formatValue($item['newValue'], $depth);
-                    $result[] = "{$indent}- {$item['key']}: {$oldValue}";
-                    $result[] = "{$indent}+ {$item['key']}: {$newValue}";
+                    $result[] = "{$indent}- {$key}: {$oldValue}";
+                    $result[] = "{$indent}+ {$key}: {$newValue}";
                     break;
                 default:
-                    throw new \InvalidArgumentException("Unknown operation type: {$item['type']}");
+                    throw new \InvalidArgumentException("Unknown operation type: {$type}");
             }
         }
 
