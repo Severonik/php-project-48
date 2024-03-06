@@ -17,13 +17,17 @@ class StylishFormatter
         $indentSize = 4;
         $indent = str_repeat(' ', $indentSize * $depth);
         $result = [];
-
+    
         foreach ($diff as $item) {
-
+            // Проверяем, что $item является массивом
+            if (!is_array($item)) {
+                throw new \InvalidArgumentException("Item should be an array");
+            }
+    
             error_log('item' . json_encode($item));
             $key = $item['key'];
             $type = $item['type'];
-
+    
             switch ($type) {
                 case 'nested':
                     // Проверяем, что значение 'children' является массивом
@@ -48,7 +52,7 @@ class StylishFormatter
                     throw new \InvalidArgumentException("Unknown operation type: {$type}");
             }
         }
-
+    
         return implode("\n", $result);
     }
 
@@ -69,7 +73,7 @@ class StylishFormatter
         } elseif (is_null($value)) {
             return 'null';
         } else {
-            return $value; // Преобразуем значение в строку
+            return (string) $value; // Преобразуем значение в строку
         }
     }
 
