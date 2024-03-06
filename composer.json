@@ -9,9 +9,9 @@
             "src/Differ.php",
             "src/Parsers.php",
             "src/Formatter.php",
-            "src/JsonFormatter.php",
-            "src/PlainFormatter.php",
-            "src/StylishFormatter.php"
+            "src/Formatters/JsonFormatter.php",
+            "src/Formatters/PlainFormatter.php",
+            "src/Formatters/StylishFormatter.php"
         ]
     },
     "bin": [
