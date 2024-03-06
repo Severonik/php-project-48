@@ -69,7 +69,7 @@ class StylishFormatter
         } elseif (is_null($value)) {
             return 'null';
         } else {
-            return (string) $value; // Преобразуем значение в строку
+            return $value; // Преобразуем значение в строку
         }
     }
 
