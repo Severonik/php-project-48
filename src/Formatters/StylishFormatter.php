@@ -14,19 +14,19 @@ class StylishFormatter
      */
     public function format(array $diff, int $depth = 1): string
     {
-
-
         $indentSize = 4;
         $indent = str_repeat(' ', $indentSize * $depth);
         $result = [];
     
         foreach ($diff as $item) {
-            // Проверяем, что $item является массивом
+            // Добавим вывод отладочной информации
+            error_log('Item: ' . json_encode($item));
+    
+            // Проверяем, является ли $item массивом
             if (!is_array($item)) {
                 throw new \InvalidArgumentException("Item should be an array");
             }
     
-
             $key = $item['key'];
             $type = $item['type'];
     
