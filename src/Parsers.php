@@ -6,9 +6,23 @@ use Symfony\Component\Yaml\Yaml;
 
 function parse($content, $format)
 {
-    return match ($format) {
-        'json' => json_decode($content, true),
-        'yaml', 'yml' => Yaml::parse($content),
-        default => throw new \Exception("Unsupported file format: {$format}"),
-    };
+    switch ($format) {
+        case 'json':
+            return json_decode($content, true);
+        case 'yaml':
+        case 'yml':
+            return Yaml::parse($content);
+        default:
+            throw new \Exception("Unsupported file format: {$format}");
+    }
+}
+
+// Дополнительная функция, которая преобразует данные, чтобы они всегда были в нужном формате
+function ensureArrayFormat(array $data): array
+{
+    $result = [];
+    foreach ($data as $key => $value) {
+        $result[] = [$key, $value];
+    }
+    return $result;
 }

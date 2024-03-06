@@ -12,25 +12,13 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'sty
     $format1 = pathinfo($pathToFile1, PATHINFO_EXTENSION);
     $format2 = pathinfo($pathToFile2, PATHINFO_EXTENSION);
 
-    // Проверяем форматы файлов
-    error_log("Format of file 1: $format1");
-    error_log("Format of file 2: $format2");
-
     // Получаем содержимое файлов
     $content1 = file_get_contents($pathToFile1);
     $content2 = file_get_contents($pathToFile2);
 
-    // Проверяем содержимое файлов
-    error_log("Content of file 1: $content1");
-    error_log("Content of file 2: $content2");
-
     // Парсим содержимое файлов
     $data1 = parse($content1, $format1);
     $data2 = parse($content2, $format2);
-
-    // Проверяем результаты парсинга
-    error_log("Parsed data 1: " . json_encode($data1));
-    error_log("Parsed data 2: " . json_encode($data2));
 
     // Сравниваем данные и строим результат сравнения
     $diff = buildDiff($data1, $data2);
@@ -52,22 +40,6 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'sty
 
 function buildDiff(array $data1, array $data2): array
 {
-
-       // Проверяем, что каждый элемент массива $data1 является парой ключ-значение
-       foreach ($data1 as $element) {
-        if (!is_array($element) || count($element) !== 2 || !isset($element[0]) || !isset($element[1])) {
-            throw new \InvalidArgumentException("Each element of \$data1 should be a key-value pair");
-        }
-    }
-
-    // Проверяем, что каждый элемент массива $data2 является парой ключ-значение
-    foreach ($data2 as $element) {
-        if (!is_array($element) || count($element) !== 2 || !isset($element[0]) || !isset($element[1])) {
-            throw new \InvalidArgumentException("Each element of \$data2 should be a key-value pair");
-        }
-    }
-
-
     $keys = array_unique(array_merge(array_keys($data1), array_keys($data2)));
     sort($keys);
 
