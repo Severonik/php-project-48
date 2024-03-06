@@ -14,6 +14,8 @@ class StylishFormatter
      */
     public function format(array $diff, int $depth = 1): string
     {
+        error_log('Diff array: ' . json_encode($diff));
+
         $indentSize = 4;
         $indent = str_repeat(' ', $indentSize * $depth);
         $result = [];
