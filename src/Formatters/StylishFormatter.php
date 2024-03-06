@@ -20,13 +20,12 @@ class StylishFormatter
 
         foreach ($diff as $item) {
             $key = $item['key'];
-            $key = (string) $key;
             $type = $item['type'];
 
             switch ($type) {
                 case 'nested':
                     // Проверяем, что значение 'children' является массивом
-                    if (!is_array($item['children'])) {
+                    if (!empty($item['children'])) {
                         throw new \InvalidArgumentException("Children should be an array");
                     }
                     $result[] = "{$indent}{$key}: " . $this->format($item['children'], $depth + 1);
