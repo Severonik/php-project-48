@@ -19,24 +19,13 @@ class StylishFormatter
         $result = [];
     
         foreach ($diff as $item) {
-            // Добавим вывод отладочной информации
-            error_log('Item: ' . json_encode($item));
-    
-            // Проверяем, является ли $item массивом
-            if (!is_array($item)) {
-                throw new \InvalidArgumentException("Item should be an array");
-            }
-    
             $key = $item['key'];
             $type = $item['type'];
+            $indentKey = "{$indent}{$key}";
     
             switch ($type) {
                 case 'nested':
-                    // Проверяем, что значение 'children' является массивом
-                    if (!is_array($item['children'])) {
-                        throw new \InvalidArgumentException("Children should be an array");
-                    }
-                    $result[] = "{$indent}{$key}: " . $this->format($item['children'], $depth + 1);
+                    $result[] = "{$indentKey}: " . $this->format($item['children'], $depth + 1);
                     break;
                 case 'added':
                 case 'removed':
@@ -47,8 +36,14 @@ class StylishFormatter
                 case 'changed':
                     $oldValue = $this->formatValue($item['oldValue'], $depth);
                     $newValue = $this->formatValue($item['newValue'], $depth);
-                    $result[] = "{$indent}- {$key}: {$oldValue}";
-                    $result[] = "{$indent}+ {$key}: {$newValue}";
+    
+                    if (is_array($oldValue) && is_array($newValue)) {
+                        $result[] = "{$indent}- {$key}: {$oldValue}";
+                        $result[] = "{$indent}+ {$key}: {$newValue}";
+                    } else {
+                        $result[] = "{$indent}- {$key}: {$oldValue}";
+                        $result[] = "{$indent}+ {$key}: {$newValue}";
+                    }
                     break;
                 default:
                     throw new \InvalidArgumentException("Unknown operation type: {$type}");
