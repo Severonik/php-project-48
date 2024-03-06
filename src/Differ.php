@@ -47,14 +47,13 @@ function buildDiff(array $data1, array $data2): array
     $diff = [];
     foreach ($keys as $key) {
         if (!array_key_exists($key, $data2)) {
-            $diff[] = "  - {$key}: " . json_encode($data1[$key]);
+            $diff[] = ["type" => "removed", "key" => $key, "value" => $data1[$key]];
         } elseif (!array_key_exists($key, $data1)) {
-            $diff[] = "  + {$key}: " . json_encode($data2[$key]);
+            $diff[] = ["type" => "added", "key" => $key, "value" => $data2[$key]];
         } elseif ($data1[$key] === $data2[$key]) {
-            $diff[] = "    {$key}: " . json_encode($data1[$key]);
+            $diff[] = ["type" => "unchanged", "key" => $key, "value" => $data1[$key]];
         } else {
-            $diff[] = "  - {$key}: " . json_encode($data1[$key]);
-            $diff[] = "  + {$key}: " . json_encode($data2[$key]);
+            $diff[] = ["type" => "changed", "key" => $key, "oldValue" => $data1[$key], "newValue" => $data2[$key]];
         }
     }
 

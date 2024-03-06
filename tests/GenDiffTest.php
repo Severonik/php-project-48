@@ -23,7 +23,7 @@ class GenDiffTest extends TestCase
         }
         JSON;
         
-        $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2));
+        $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2, 'stylish'));
     }
 
     /**
@@ -31,20 +31,36 @@ class GenDiffTest extends TestCase
      */
     public function testGenDiffForYamlFilesInStylishFormat()
     {
-      $pathToFile1 = __DIR__ . '/fixtures/filepath1.yaml';
-      $pathToFile2 = __DIR__ . '/fixtures/filepath2.yaml';
-      $expectedResult = <<<YAML
-      {
-        - common: {"setting1":"Value 1","setting2":200,"setting3":true,"setting6":{"key":"value","doge":{"wow":""}}}
-        + common: {"follow":false,"setting1":"Value 1","setting3":null,"setting4":"blah blah","setting5":{"key5":"value5"},"setting6":{"key":"value","ops":"vops","doge":{"wow":"so much"}}}
-        - group1: {"baz":"bas","foo":"bar","nest":{"key":"value"}}
-        + group1: {"foo":"bar","baz":"bars","nest":"str"}
-        - group2: {"abc":12345,"deep":{"id":45}}
-        + group3: {"deep":{"id":{"number":45}},"fee":100500}
-      }
-      YAML;
+        $pathToFile1 = __DIR__ . '/fixtures/filepath1.yaml';
+        $pathToFile2 = __DIR__ . '/fixtures/filepath2.yaml';
+        $expectedResult = <<<YAML
+        {
+          - common: {"setting1":"Value 1","setting2":200,"setting3":true,"setting6":{"key":"value","doge":{"wow":""}}}
+          + common: {"follow":false,"setting1":"Value 1","setting3":null,"setting4":"blah blah","setting5":{"key5":"value5"},"setting6":{"key":"value","ops":"vops","doge":{"wow":"so much"}}}
+          - group1: {"baz":"bas","foo":"bar","nest":{"key":"value"}}
+          + group1: {"foo":"bar","baz":"bars","nest":"str"}
+          - group2: {"abc":12345,"deep":{"id":45}}
+          + group3: {"deep":{"id":{"number":45}},"fee":100500}
+        }
+        YAML;
         
-        $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2));
+        $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2, 'stylish'));
+    }
+
+    /**
+     * Тестирование сравнения двух JSON файлов в формате plain.
+     */
+    public function testGenDiffForJsonFilesInPlainFormat()
+    {
+        $pathToFile1 = __DIR__ . '/fixtures/file1.json';
+        $pathToFile2 = __DIR__ . '/fixtures/file2.json';
+        $expectedResult = "Property 'follow' was added with value: false\n";
+        $expectedResult .= "Property 'host' was removed\n";
+        $expectedResult .= "Property 'proxy' was removed\n";
+        $expectedResult .= "Property 'timeout' was updated. From 50 to 20\n";
+        $expectedResult .= "Property 'verbose' was added with value: true\n";
+        
+        $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2, 'plain'));
     }
 
     /**
@@ -68,4 +84,4 @@ class GenDiffTest extends TestCase
         
         $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2, 'plain'));
     }
-  }
+}
