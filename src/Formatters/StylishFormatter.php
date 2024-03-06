@@ -35,6 +35,8 @@ class StylishFormatter
                     $result[] = "{$indent}- {$item['key']}: {$oldValue}";
                     $result[] = "{$indent}+ {$item['key']}: {$newValue}";
                     break;
+                default:
+                    throw new \InvalidArgumentException("Unknown operation type: {$item['type']}");
             }
         }
 
@@ -53,9 +55,13 @@ class StylishFormatter
     {
         if (is_array($value)) {
             return $this->formatDiff($value, $depth + 1);
+        } elseif (is_bool($value)) {
+            return $value ? 'true' : 'false';
+        } elseif (is_null($value)) {
+            return 'null';
+        } else {
+            return (string) $value; // Преобразуем значение в строку
         }
-
-        return json_encode($value);
     }
 
     /**
