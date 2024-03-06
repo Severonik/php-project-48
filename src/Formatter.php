@@ -4,6 +4,7 @@ namespace Hexlet\Code;
 
 use Hexlet\Code\Formatters\StylishFormatter;
 use Hexlet\Code\Formatters\PlainFormatter;
+use Hexlet\Code\Formatters\JsonFormatter;
 
 class Formatter
 {
@@ -14,6 +15,8 @@ class Formatter
                 return new StylishFormatter();
             case 'plain':
                 return new PlainFormatter();
+            case 'json':
+                return new JsonFormatter();
             default:
                 throw new \InvalidArgumentException("Неизвестный формат: {$formatName}");
         }
