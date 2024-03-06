@@ -20,6 +20,7 @@ class StylishFormatter
 
         foreach ($diff as $item) {
             $key = $item['key'];
+            $key = (string) $key;
             $type = $item['type'];
 
             switch ($type) {
