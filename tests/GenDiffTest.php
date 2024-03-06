@@ -33,9 +33,6 @@ class GenDiffTest extends TestCase
     {
         $pathToFile1 = __DIR__ . '/fixtures/filepath1.yaml';
         $pathToFile2 = __DIR__ . '/fixtures/filepath2.yaml';
-        error_log("Path to file 1: $pathToFile1");
-        error_log("Path to file 2: $pathToFile2");
-    
         $expectedResult = <<<YAML
         {
           - common: {"setting1":"Value 1","setting2":200,"setting3":true,"setting6":{"key":"value","doge":{"wow":""}}}
@@ -47,13 +44,7 @@ class GenDiffTest extends TestCase
         }
         YAML;
         
-        error_log("Expected result: $expectedResult");
-    
-        $result = genDiff($pathToFile1, $pathToFile2, 'stylish');
-    
-        error_log("Generated result: $result");
-    
-        $this->assertEquals($expectedResult, $result);
+        $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2, 'stylish'));
     }
 
     /**

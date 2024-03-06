@@ -19,6 +19,8 @@ class StylishFormatter
         $result = [];
 
         foreach ($diff as $item) {
+
+            error_log('item' . json_encode($item));
             $key = $item['key'];
             $type = $item['type'];
 
