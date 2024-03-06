@@ -23,6 +23,19 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'sty
     // Сравниваем данные и строим результат сравнения
     $diff = buildDiff($data1, $data2);
 
+
+    // Проверяем форматы файлов
+error_log("Format of file 1: $format1");
+error_log("Format of file 2: $format2");
+
+// Проверяем содержимое файлов
+error_log("Content of file 1: $content1");
+error_log("Content of file 2: $content2");
+
+// Проверяем результаты парсинга
+error_log("Parsed data 1: " . json_encode($data1));
+error_log("Parsed data 2: " . json_encode($data2));
+
     // Выбираем форматтер в зависимости от переданного аргумента
     switch ($format) {
         case 'stylish':
