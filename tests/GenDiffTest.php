@@ -24,7 +24,7 @@ class GenDiffTest extends TestCase
         JSON;
         
         $differ = new Differ();
-        $this->assertEquals($expectedResult, $differ->genDiff($pathToFile1, $pathToFile2, 'json'));
+        $this->assertEquals($expectedResult, $differ->genDiff($pathToFile1, $pathToFile2));
     }
 
     /**
