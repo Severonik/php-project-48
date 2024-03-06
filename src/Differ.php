@@ -35,8 +35,12 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format): stri
             throw new \InvalidArgumentException("Unsupported format: {$format}");
     }
 
-    // Форматируем результат сравнения
-    return $formatter->format($diff);
+    // Форматируем результат сравнения в соответствии с выбранным форматом
+    if ($format === 'plain') {
+        return $formatter->format($diff);
+    } else {
+        return $formatter->formatDiff($diff);
+    }
 }
 
 function buildDiff(array $data1, array $data2): array
