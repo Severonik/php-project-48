@@ -12,7 +12,7 @@ class StylishFormatter
      *
      * @return string Строковое представление отформатированной разницы
      */
-    public function format(array $diff, int $depth = 1): string
+    public function formatDiff(array $diff, int $depth = 1): string
     {
         $indentSize = 4;
         $indent = str_repeat(' ', $indentSize * $depth);
@@ -21,7 +21,7 @@ class StylishFormatter
         foreach ($diff as $item) {
             switch ($item['type']) {
                 case 'nested':
-                    $result[] = "{$indent}{$item['key']}: " . $this->format($item['children'], $depth + 1);
+                    $result[] = "{$indent}{$item['key']}: " . $this->formatDiff($item['children'], $depth + 1);
                     break;
                 case 'added':
                 case 'removed':
@@ -52,7 +52,7 @@ class StylishFormatter
     private function formatValue($value, int $depth): string
     {
         if (is_array($value)) {
-            return $this->format($value, $depth + 1);
+            return $this->formatDiff($value, $depth + 1);
         }
 
         return json_encode($value);
