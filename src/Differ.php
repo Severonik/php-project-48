@@ -2,45 +2,41 @@
 
 namespace Hexlet\Code;
 
-use Hexlet\Code\Formatters\JsonFormatter;
 use Hexlet\Code\Formatters\StylishFormatter;
 use Hexlet\Code\Formatters\PlainFormatter;
 use function Hexlet\Code\Parsers\parse;
 
-class Differ
+function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'stylish'): string
 {
-    /**
-     * Сравнивает два файла и возвращает отформатированную разницу.
-     *
-     * @param string $pathToFile1 Путь к первому файлу
-     * @param string $pathToFile2 Путь ко второму файлу
-     * @param string $format      Формат вывода разницы (json, stylish, plain)
-     *
-     * @return string Отформатированная разница между файлами
-     */
-    public function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'stylish'): string
-    {
-        $data1 = parse(file_get_contents($pathToFile1), pathinfo($pathToFile1, PATHINFO_EXTENSION));
-        $data2 = parse(file_get_contents($pathToFile2), pathinfo($pathToFile2, PATHINFO_EXTENSION));
+    // Получаем форматы файлов
+    $format1 = pathinfo($pathToFile1, PATHINFO_EXTENSION);
+    $format2 = pathinfo($pathToFile2, PATHINFO_EXTENSION);
 
-        $diff = $this->buildDiff($data1, $data2);
+    // Получаем содержимое файлов
+    $content1 = file_get_contents($pathToFile1);
+    $content2 = file_get_contents($pathToFile2);
 
-        switch ($format) {
-            case 'stylish':
-                $formatter = new StylishFormatter();
-                break;
-            case 'plain':
-                $formatter = new PlainFormatter();
-                break;
-            case 'json':
-                $formatter = new JsonFormatter();
-                break;
-            default:
-                throw new \InvalidArgumentException("Unknown format: {$format}");
-        }
+    // Парсим содержимое файлов
+    $data1 = parse($content1, $format1);
+    $data2 = parse($content2, $format2);
 
-        return $formatter->format($diff);
+    // Сравниваем данные и строим результат сравнения
+    $diff = buildDiff($data1, $data2);
+
+    // Выбираем форматтер в зависимости от переданного аргумента
+    switch ($format) {
+        case 'stylish':
+            $formatter = new StylishFormatter();
+            break;
+        case 'plain':
+            $formatter = new PlainFormatter();
+            break;
+        default:
+            throw new \InvalidArgumentException("Unsupported format: {$format}");
     }
+        return $formatter->format($diff);
+ 
+}
 
 function buildDiff(array $data1, array $data2): array
 {
@@ -61,6 +57,4 @@ function buildDiff(array $data1, array $data2): array
     }
 
     return $diff;
-}
-
 }
