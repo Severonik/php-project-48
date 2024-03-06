@@ -41,21 +41,16 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'sty
 function buildDiff(array $data1, array $data2): array
 {
 
-       // Проверяем, что $data1 и $data2 содержат только массивы
-       if (!is_array($data1) || !is_array($data2)) {
-        throw new \InvalidArgumentException("Input data should be arrays");
-    }
-
-    // Проверяем, что каждый элемент массива $data1 имеет ключи и значения
-    foreach ($data1 as $key => $value) {
-        if (!is_string($key) || is_array($value) || is_object($value)) {
+       // Проверяем, что каждый элемент массива $data1 является парой ключ-значение
+       foreach ($data1 as $element) {
+        if (!is_array($element) || count($element) !== 2 || !isset($element[0]) || !isset($element[1])) {
             throw new \InvalidArgumentException("Each element of \$data1 should be a key-value pair");
         }
     }
 
-    // Проверяем, что каждый элемент массива $data2 имеет ключи и значения
-    foreach ($data2 as $key => $value) {
-        if (!is_string($key) || is_array($value) || is_object($value)) {
+    // Проверяем, что каждый элемент массива $data2 является парой ключ-значение
+    foreach ($data2 as $element) {
+        if (!is_array($element) || count($element) !== 2 || !isset($element[0]) || !isset($element[1])) {
             throw new \InvalidArgumentException("Each element of \$data2 should be a key-value pair");
         }
     }
