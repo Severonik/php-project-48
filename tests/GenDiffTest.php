@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use function Hexlet\Code\genDiff;
+use Hexlet\Code\Differ;
 
 class GenDiffTest extends TestCase
 {
@@ -23,7 +23,8 @@ class GenDiffTest extends TestCase
         }
         JSON;
         
-        $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2, 'stylish'));
+        $differ = new Differ();
+        $this->assertEquals($expectedResult, $differ->genDiff($pathToFile1, $pathToFile2, 'stylish'));
     }
 
     /**
@@ -44,7 +45,8 @@ class GenDiffTest extends TestCase
         }
         YAML;
         
-        $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2, 'stylish'));
+        $differ = new Differ();
+        $this->assertEquals($expectedResult, $differ->genDiff($pathToFile1, $pathToFile2, 'stylish'));
     }
 
     /**
@@ -60,7 +62,8 @@ class GenDiffTest extends TestCase
         $expectedResult .= "Property 'timeout' was updated. From 50 to 20\n";
         $expectedResult .= "Property 'verbose' was added with value: true\n";
         
-        $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2, 'plain'));
+        $differ = new Differ();
+        $this->assertEquals($expectedResult, $differ->genDiff($pathToFile1, $pathToFile2, 'plain'));
     }
 
     /**
@@ -82,6 +85,7 @@ class GenDiffTest extends TestCase
         $expectedResult .= "Property 'group2' was removed\n";
         $expectedResult .= "Property 'group3' was added with value: [complex value]\n";
         
-        $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2, 'plain'));
+        $differ = new Differ();
+        $this->assertEquals($expectedResult, $differ->genDiff($pathToFile1, $pathToFile2, 'plain'));
     }
 }
