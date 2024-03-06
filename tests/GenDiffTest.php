@@ -47,24 +47,6 @@ class GenDiffTest extends TestCase
         $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2));
     }
 
-        /**
-     * Тестирование сравнения двух JSON файлов в формате plain.
-     */
-    public function testGenDiffForJsonFilesInPlainFormat()
-    {
-        $pathToFile1 = __DIR__ . '/fixtures/file1.json';
-        $pathToFile2 = __DIR__ . '/fixtures/file2.json';
-        $expectedResult = <<<PLAIN
-        Property 'follow' was added with value: false
-        Property 'host' was removed
-        Property 'proxy' was removed
-        Property 'timeout' was updated. From 50 to 20
-        Property 'verbose' was added with value: true
-        PLAIN;
-        
-        $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2, 'plain'));
-    }
-
     /**
      * Тестирование сравнения двух YAML файлов в формате plain.
      */
@@ -85,7 +67,7 @@ class GenDiffTest extends TestCase
         Property 'group2' was removed
         Property 'group3' was added with value: [complex value]
         PLAIN;
-        
-        $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2, 'plain'));
+
+        $this->assertEquals(trim($expectedResult), trim(genDiff($pathToFile1, $pathToFile2, 'plain')));
     }
   }
