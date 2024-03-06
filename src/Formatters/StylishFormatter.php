@@ -24,6 +24,10 @@ class StylishFormatter
 
             switch ($type) {
                 case 'nested':
+                    // Проверяем, что значение 'children' является массивом
+                    if (!is_array($item['children'])) {
+                        throw new \InvalidArgumentException("Children should be an array");
+                    }
                     $result[] = "{$indent}{$key}: " . $this->format($item['children'], $depth + 1);
                     break;
                 case 'added':
