@@ -6,7 +6,7 @@ use Hexlet\Code\Formatters\StylishFormatter;
 use Hexlet\Code\Formatters\PlainFormatter;
 use function Hexlet\Code\Parsers\parse;
 
-function genDiff(string $pathToFile1, string $pathToFile2, string $format): string
+function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'stylish'): string
 {
     // Получаем форматы файлов
     $format1 = pathinfo($pathToFile1, PATHINFO_EXTENSION);
