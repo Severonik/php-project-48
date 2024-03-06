@@ -12,29 +12,28 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'sty
     $format1 = pathinfo($pathToFile1, PATHINFO_EXTENSION);
     $format2 = pathinfo($pathToFile2, PATHINFO_EXTENSION);
 
+    // Проверяем форматы файлов
+    error_log("Format of file 1: $format1");
+    error_log("Format of file 2: $format2");
+
     // Получаем содержимое файлов
     $content1 = file_get_contents($pathToFile1);
     $content2 = file_get_contents($pathToFile2);
+
+    // Проверяем содержимое файлов
+    error_log("Content of file 1: $content1");
+    error_log("Content of file 2: $content2");
 
     // Парсим содержимое файлов
     $data1 = parse($content1, $format1);
     $data2 = parse($content2, $format2);
 
+    // Проверяем результаты парсинга
+    error_log("Parsed data 1: " . json_encode($data1));
+    error_log("Parsed data 2: " . json_encode($data2));
+
     // Сравниваем данные и строим результат сравнения
     $diff = buildDiff($data1, $data2);
-
-
-    // Проверяем форматы файлов
-error_log("Format of file 1: $format1");
-error_log("Format of file 2: $format2");
-
-// Проверяем содержимое файлов
-error_log("Content of file 1: $content1");
-error_log("Content of file 2: $content2");
-
-// Проверяем результаты парсинга
-error_log("Parsed data 1: " . json_encode($data1));
-error_log("Parsed data 2: " . json_encode($data2));
 
     // Выбираем форматтер в зависимости от переданного аргумента
     switch ($format) {
