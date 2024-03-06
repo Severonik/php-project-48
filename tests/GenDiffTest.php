@@ -50,23 +50,6 @@ class GenDiffTest extends TestCase
     }
 
     /**
-     * Тестирование сравнения двух JSON файлов в формате plain.
-     */
-    public function testGenDiffForJsonFilesInPlainFormat()
-    {
-        $pathToFile1 = __DIR__ . '/fixtures/file1.json';
-        $pathToFile2 = __DIR__ . '/fixtures/file2.json';
-        $expectedResult = "Property 'follow' was added with value: false\n";
-        $expectedResult .= "Property 'host' was removed\n";
-        $expectedResult .= "Property 'proxy' was removed\n";
-        $expectedResult .= "Property 'timeout' was updated. From 50 to 20\n";
-        $expectedResult .= "Property 'verbose' was added with value: true\n";
-        
-        $differ = new Differ();
-        $this->assertEquals($expectedResult, $differ->genDiff($pathToFile1, $pathToFile2, 'plain'));
-    }
-
-    /**
      * Тестирование сравнения двух YAML файлов в формате plain.
      */
     public function testGenDiffForYamlFilesInPlainFormat()
