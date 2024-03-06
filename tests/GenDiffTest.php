@@ -46,4 +46,46 @@ class GenDiffTest extends TestCase
         
         $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2));
     }
+
+        /**
+     * Тестирование сравнения двух JSON файлов в формате plain.
+     */
+    public function testGenDiffForJsonFilesInPlainFormat()
+    {
+        $pathToFile1 = __DIR__ . '/fixtures/file1.json';
+        $pathToFile2 = __DIR__ . '/fixtures/file2.json';
+        $expectedResult = <<<PLAIN
+        Property 'follow' was added with value: false
+        Property 'host' was removed
+        Property 'proxy' was removed
+        Property 'timeout' was updated. From 50 to 20
+        Property 'verbose' was added with value: true
+        PLAIN;
+        
+        $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2, 'plain'));
+    }
+
+    /**
+     * Тестирование сравнения двух YAML файлов в формате plain.
+     */
+    public function testGenDiffForYamlFilesInPlainFormat()
+    {
+        $pathToFile1 = __DIR__ . '/fixtures/filepath1.yaml';
+        $pathToFile2 = __DIR__ . '/fixtures/filepath2.yaml';
+        $expectedResult = <<<PLAIN
+        Property 'common.follow' was added with value: false
+        Property 'common.setting2' was removed
+        Property 'common.setting3' was updated. From true to null
+        Property 'common.setting4' was added with value: 'blah blah'
+        Property 'common.setting5' was added with value: [complex value]
+        Property 'common.setting6.doge.wow' was updated. From '' to 'so much'
+        Property 'common.setting6.ops' was added with value: 'vops'
+        Property 'group1.baz' was updated. From 'bas' to 'bars'
+        Property 'group1.nest' was updated. From [complex value] to 'str'
+        Property 'group2' was removed
+        Property 'group3' was added with value: [complex value]
+        PLAIN;
+        
+        $this->assertEquals($expectedResult, genDiff($pathToFile1, $pathToFile2, 'plain'));
+    }
   }

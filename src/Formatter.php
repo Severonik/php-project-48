@@ -3,6 +3,7 @@
 namespace Hexlet\Code;
 
 use Hexlet\Code\Formatters\StylishFormatter;
+use Hexlet\Code\Formatters\PlainFormatter;
 
 class Formatter
 {
@@ -11,6 +12,8 @@ class Formatter
         switch ($formatName) {
             case 'stylish':
                 return new StylishFormatter();
+            case 'plain':
+                return new PlainFormatter();
             default:
                 throw new \InvalidArgumentException("Неизвестный формат: {$formatName}");
         }
