@@ -30,6 +30,7 @@ class StylishFormatter
                     $result[] = "{$indent}{$this->getSignByType($item['type'])} {$item['key']}: {$value}";
                     break;
                 case 'changed':
+                    $indent = str_repeat(' ', $indentSize * ($depth - 1)); // Adjusting the indent for the new value
                     $oldValue = $this->formatValue($item['oldValue'], $depth);
                     $newValue = $this->formatValue($item['newValue'], $depth);
                     $result[] = "{$indent}- {$item['key']}: {$oldValue}";
@@ -40,7 +41,7 @@ class StylishFormatter
             }
         }
 
-        return "{\n" . implode("\n", $result) . "\n}";
+        return implode("\n", $result);
     }
 
     /**
