@@ -40,6 +40,27 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'sty
 
 function buildDiff(array $data1, array $data2): array
 {
+
+       // Проверяем, что $data1 и $data2 содержат только массивы
+       if (!is_array($data1) || !is_array($data2)) {
+        throw new \InvalidArgumentException("Input data should be arrays");
+    }
+
+    // Проверяем, что каждый элемент массива $data1 имеет ключи и значения
+    foreach ($data1 as $key => $value) {
+        if (!is_string($key) || is_array($value) || is_object($value)) {
+            throw new \InvalidArgumentException("Each element of \$data1 should be a key-value pair");
+        }
+    }
+
+    // Проверяем, что каждый элемент массива $data2 имеет ключи и значения
+    foreach ($data2 as $key => $value) {
+        if (!is_string($key) || is_array($value) || is_object($value)) {
+            throw new \InvalidArgumentException("Each element of \$data2 should be a key-value pair");
+        }
+    }
+
+
     $keys = array_unique(array_merge(array_keys($data1), array_keys($data2)));
     sort($keys);
 

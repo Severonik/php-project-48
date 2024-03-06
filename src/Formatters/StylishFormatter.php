@@ -14,7 +14,7 @@ class StylishFormatter
      */
     public function format(array $diff, int $depth = 1): string
     {
-        error_log('Diff array: ' . json_encode($diff));
+
 
         $indentSize = 4;
         $indent = str_repeat(' ', $indentSize * $depth);
@@ -26,7 +26,7 @@ class StylishFormatter
                 throw new \InvalidArgumentException("Item should be an array");
             }
     
-            error_log('item' . json_encode($item));
+
             $key = $item['key'];
             $type = $item['type'];
     
